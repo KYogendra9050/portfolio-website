@@ -1,0 +1,177 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kapperapu yogendra  - Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .hover-scale:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+        }
+        .hero-image {
+            border: 4px solid #3b82f6;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5), 0 0 30px rgba(147, 51, 234, 0.3);
+        }
+        .project-image {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .project-image:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.6);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white font-sans">
+    <!-- Navbar -->
+    <nav class="bg-blue-800 p-4 sticky top-0 z-10 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Kapperapu Yogendra</h1>
+            <ul class="flex space-x-6">
+                <li><a href="#home" class="hover:text-blue-300 transition-colors">Home</a></li>
+                <li><a href="#about" class="hover:text-blue-300 transition-colors">About</a></li>
+                <li><a href="#skills" class="hover:text-blue-300 transition-colors">Skills</a></li>
+                <li><a href="#projects" class="hover:text-blue-300 transition-colors">Projects</a></li>
+                <li><a href="#contact" class="hover:text-blue-300 transition-colors">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600">
+        <div class="container mx-auto text-center">
+            <img src="https://i.postimg.cc/MHCWFkj0/Whats-App-Image-2025-08-02-at-20-50-44-85dea07d.jpg" alt="Pavan Kumar" class="w-48 h-48 rounded-full mx-auto mb-4 hero-image">
+            <h1 class="text-5xl font-bold mb-4">Kapperapu Yogendra</h1>
+            <h2 class="text-3xl mb-6">SAP fico | Video Editor</h2>
+            <a href="#contact" class="bg-blue-500 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition-colors">Get in Touch</a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-16 bg-gray-800">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-blue-400 text-center mb-8">About Me</h2>
+            <p class="text-lg text-center max-w-2xl mx-auto">
+                To make contribution in the organization with best of my ability and also to
+develop new skills during the make interaction to achieve new heights
+
+            </p>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-16 bg-gray-900">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-blue-400 text-center mb-8">Skills</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-gray-700 p-6 rounded-lg hover-scale">
+                    <h3 class="text-xl font-semibold mb-4">Hobbies</h3>
+                    <ul class="list-disc list-inside">
+                        <li>traveling</li>
+                        <li>Reading books</li>
+                        <li>listiong music</li>
+                        <li>playing games</li>
+                    </ul>
+                </div>
+                <div class="bg-gray-700 p-6 rounded-lg hover-scale">
+                    <h3 class="text-xl font-semibold mb-4">computer skils</h3>
+                    <ul class="list-disc list-inside">
+                        <li>Ms office</li>
+                        <li>Ms word</li>
+                        <li>Basics of c</li>
+                        <li>HTML</li>
+                    </ul>
+                </div>
+                <div class="bg-gray-700 p-6 rounded-lg hover-scale">
+                    <h3 class="text-xl font-semibold mb-4">Video Editing</h3>
+                    <ul class="list-disc list-inside">
+                        <li>Adobe Premiere Pro</li>
+                        <li>After Effects</li>
+                        <li>Alight Motion</li>
+                        <li>Final Cut Pro</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-16 bg-gray-800">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-blue-400 text-center mb-8">Projects</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-gray-700 p-6 rounded-lg hover-scale">
+                    <img src="https://i.postimg.cc/CLCHYbF0/Whats-App-Image-2025-08-03-at-14-38-06-0d52611b.jpg" alt="Account Payablet" class="w-full h-48 object-cover rounded mb-4 project-image">
+                    <h3 class="text-xl font-semibold mb-2">Accounts Payable(AP)vendor invoice posting</h3>
+                    <p>Configured and managed vendor invoice posting in SAP FI to simulate a real-world purchase process for a Hyderabad-based company, ensuring accurate financial data entry and payment processing.</p>
+                </div>
+                <div class="bg-gray-700 p-6 rounded-lg hover-scale">
+                    <img src="https://i.postimg.cc/J4FTSr0C/Whats-App-Image-2025-08-03-at-14-26-42-c2640235.jpg" alt="Cost center creation" class="w-full h-48 object-cover rounded mb-4 project-image">
+                    <h3 class="text-xl font-semibold mb-2">Cost center creation and cost allocation</h3>
+                    <p>Set up a cost center in SAP CO for a Hyderabad-based IT department and allocated costs to track expenses, generating reports to support budgeting decisions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 bg-gray-900">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl font-bold text-blue-400 mb-8">Contact Me</h2>
+            <p class="text-lg mb-6">Let's connect! Reach out for collaborations or opportunities.</p>
+            <div class="flex justify-center space-x-6">
+                <a href="mailto:kkyogendra40@gmail.com" class="text-blue-300 hover:text-blue-500 transition-colors">Email</a>
+                <a href="tel:+919030322758" class="text-blue-300 hover:text-blue-500 transition-colors">+91 9030322758</a>
+                <a href="https://www.linkedin.com/in/kopparapu-youendra-02977a342" target="_blank" rel="noopener noreferrer" class="text-blue-300 hover:text-blue-500 transition-colors">LinkedIn</a>
+                <a href="https://www.youtube.com/@ismart_channel" target="_blank" rel="noopener noreferrer" class="text-blue-300 hover:text-blue-500 transition-colors">YouTube</a>
+            </div>
+            <a href="https://drive.google.com/file/d/1Q8MB5B45LVzslMOTOKdjuVk9jacGVUhE/view?usp=sharing" download class="mt-6 inline-block bg-blue-500 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition-colors">Download Resume</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-blue-800 p-4 text-center">
+        <p>&copy; 2025 Kapperapu Yogendra. All rights reserved.</p>
+    </footer>
+</body>
+</html>
